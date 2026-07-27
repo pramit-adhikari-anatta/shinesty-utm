@@ -1,0 +1,86 @@
+{%- comment -%}
+  utm-discount-banner.liquid
+  Sitewide discount banner — populated and shown/hidden by utm-discount.js.
+  Hidden by default; JS calls renderBanner() on load and after code changes.
+{%- endcomment -%}
+
+<div id="utm-discount-banner" class="utm-banner" hidden aria-live="polite" role="status">
+  <div class="utm-banner__inner">
+    <span class="utm-banner__text"></span>
+    <a class="utm-banner__link" href="#" hidden>Shop now &rarr;</a>
+  </div>
+  <button class="utm-banner__close" aria-label="Dismiss offer" type="button">&#x2715;</button>
+</div>
+
+<style>
+  .utm-banner {
+    background-color: #1a1a2e;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 48px 10px 16px;
+    position: relative;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    z-index: 200;
+  }
+  .utm-banner__inner {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .utm-banner__text {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .utm-banner__link {
+    color: #f5c842;
+    text-decoration: underline;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .utm-banner__link:hover {
+    color: #ffe680;
+  }
+  .utm-banner__close {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    opacity: 0.7;
+    line-height: 1;
+  }
+  .utm-banner__close:hover { opacity: 1; }
+
+  /* Collection page subscription price badge */
+  .utm-sub-price {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1a7a4a;
+    margin-top: 4px;
+    letter-spacing: 0.01em;
+  }
+  [data-theme="dark"] .utm-banner,
+  @media (prefers-color-scheme: dark) {
+    /* dark is already dark — keep as-is */
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var closeBtn = document.querySelector('.utm-banner__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        var banner = document.getElementById('utm-discount-banner');
+        if (banner) banner.hidden = true;
+      });
+    }
+  });
+</script>

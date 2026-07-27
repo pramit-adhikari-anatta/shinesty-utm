@@ -1,0 +1,11 @@
+{%- doc -%}
+  Captures a ?discount=CODE URL parameter on any page, persists it in
+  localStorage for 7 days, and auto-applies it when the cart loads.
+
+  Include once in layout/theme.liquid, just before </body>.
+
+  Optional theme setting override:
+    window.UTM_DISCOUNT_TTL_DAYS = N   (default 7)
+{%- enddoc -%}
+
+<script src="{{ 'utm-discount.js' | asset_url }}" defer></script>
