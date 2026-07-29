@@ -8,15 +8,18 @@ Complete port of the headless storefront's UTM capture, discount code management
 
 ```
 utm/
-├── README.md                    ← this file
-├── utm-discount.js              ← reference copy of assets/utm-discount.js
-├── utm-discount-banner.liquid   ← reference copy of snippets/utm-discount-banner.liquid
-└── utm-discount.liquid          ← reference copy of snippets/utm-discount.liquid
+├── README.md                     ← this file
+├── metafield-setup.md            ← step-by-step guide to create & populate Shopify metafields
+├── utm-discount.js               ← reference copy of assets/utm-discount.js
+├── utm-discount-banner.liquid    ← reference copy of snippets/utm-discount-banner.liquid
+├── utm-discount-config.liquid    ← reference copy of snippets/utm-discount-config.liquid
+└── utm-discount.liquid           ← reference copy of snippets/utm-discount.liquid
 ```
 
 > **Note:** The files in this `utm/` folder are reference copies. The live deployed files are:
 > - `/assets/utm-discount.js`
 > - `/snippets/utm-discount-banner.liquid`
+> - `/snippets/utm-discount-config.liquid`
 > - `/snippets/utm-discount.liquid`
 > - Included in `/layout/theme.liquid`
 

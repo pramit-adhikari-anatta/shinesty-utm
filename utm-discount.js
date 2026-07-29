@@ -48,9 +48,15 @@
   var CLIENT_ID_KEY   = 'shinesty_analytics_clientId';
   var SESSION_ID_KEY  = 'shinesty_analytics_sessionId';
 
-  // ── Discount code configs (mirrors services/discounts/static-data.ts) ────────
+  // ── Discount code configs ────────────────────────────────────────────────────
+  // Loaded from window.SHINESTY_DISCOUNT_CONFIG (injected by utm-discount-config.liquid
+  // via shop metafields). Falls back to hardcoded values if metafields are not yet set.
 
-  var COUPLES_SWAPS = [
+  var _mf = (window.SHINESTY_DISCOUNT_CONFIG && window.SHINESTY_DISCOUNT_CONFIG.discountCodeConfigs)
+    ? window.SHINESTY_DISCOUNT_CONFIG
+    : null;
+
+  var FALLBACK_COUPLES_SWAPS = [
     { productTypes: ['mens', 'mens'],               code: '10DolMatchingBoxerBoxerSub',       subscriptionPrice: 5 },
     { productTypes: ['mens', 'thongs'],             code: '10DolMatchingBoxerThongSub',       subscriptionPrice: 5 },
     { productTypes: ['mens', 'womens'],             code: '10DolMatchingBoxerWomenSub',       subscriptionPrice: 5 },
@@ -63,7 +69,7 @@
     { productTypes: ['womens - boxer', "women's - boxer"], code: '10DolMatchingWomensBoxerWomensBoxerSub', subscriptionPrice: 5 },
   ];
 
-  var DISCOUNT_CODE_CONFIGS = [
+  var FALLBACK_DISCOUNT_CODE_CONFIGS = [
     {
       bannerHref: '/pages/all-subscriptions',
       bannerText: 'Use code [discountCode] and get your first month for only [subscriptionPrice].',
@@ -98,7 +104,7 @@
         { productTypes: ['thongs'],                code: '5DollarThongSubs' },
         { productTypes: ['thongs - modal'],        code: '5DollarModalThongSubs' },
         { productTypes: ["women's boxer"],         code: '5DollarWomensBoxerSub' },
-      ].concat(COUPLES_SWAPS),
+      ].concat(FALLBACK_COUPLES_SWAPS),
       subscriptionFrequencies: ['monthly'],
       subscriptionPrice: 5,
     },
@@ -126,7 +132,7 @@
         { productTypes: ['thongs'],                code: 'NiceHamThongSubs' },
         { productTypes: ['thongs - modal'],        code: 'NiceHamModalThongSubs' },
         { productTypes: ["women's boxer"],         code: 'NiceHamWomensBoxerSub' },
-      ].concat(COUPLES_SWAPS),
+      ].concat(FALLBACK_COUPLES_SWAPS),
       subscriptionFrequencies: ['monthly'],
       subscriptionPrice: 10,
     },
@@ -143,13 +149,30 @@
     },
   ];
 
-  var SPECIAL_CONFIGS = [
+  var FALLBACK_SPECIAL_CONFIGS = [
     {
       bannerTextDefault: "Buy 5 get 2 free. Shop now & we'll apply at checkout.",
       expiresDays: 21,
       searchParams: { startsWith: 'buy5get2' },
     },
   ];
+
+  // Active configs — metafield values merged with couples swaps when from metafields
+  var COUPLES_SWAPS = _mf ? (_mf.couplesSwaps || []) : FALLBACK_COUPLES_SWAPS;
+
+  var DISCOUNT_CODE_CONFIGS = _mf
+    ? _mf.discountCodeConfigs.map(function (cfg) {
+        // Append couples swaps to any config that already has productTypeSwaps
+        if (cfg.productTypeSwaps && COUPLES_SWAPS.length) {
+          return Object.assign({}, cfg, {
+            productTypeSwaps: cfg.productTypeSwaps.concat(COUPLES_SWAPS),
+          });
+        }
+        return cfg;
+      })
+    : FALLBACK_DISCOUNT_CODE_CONFIGS;
+
+  var SPECIAL_CONFIGS = _mf ? (_mf.specialConfigs || []) : FALLBACK_SPECIAL_CONFIGS;
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 

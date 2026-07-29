@@ -1,0 +1,36 @@
+{%- comment -%}
+  utm-discount-config.liquid
+  Reads discount code configs from shop metafields and injects them as
+  window.SHINESTY_DISCOUNT_CONFIG before utm-discount.js loads.
+
+  Metafields required (Settings → Custom data → Shop):
+    shinesty.discount_code_configs   — JSON array of discount code configs
+    shinesty.discount_special_configs — JSON array of special pattern configs
+    shinesty.discount_couples_swaps  — JSON array of couples swap entries
+
+  Place in layout/theme.liquid ABOVE {%- render 'utm-discount' -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign discount_configs  = shop.metafields.shinesty.discount_code_configs.value
+  assign special_configs   = shop.metafields.shinesty.discount_special_configs.value
+  assign couples_swaps     = shop.metafields.shinesty.discount_couples_swaps.value
+  assign has_configs = false
+  if discount_configs != blank
+    assign has_configs = true
+  endif
+-%}
+
+<script>
+  window.SHINESTY_DISCOUNT_CONFIG = {
+    {%- if has_configs -%}
+    discountCodeConfigs:  {{ discount_configs  | json }},
+    specialConfigs:       {{ special_configs   | default: '[]' | json }},
+    couplesSwaps:         {{ couples_swaps     | default: '[]' | json }}
+    {%- else -%}
+    discountCodeConfigs: null,
+    specialConfigs: null,
+    couplesSwaps: null
+    {%- endif -%}
+  };
+</script>
